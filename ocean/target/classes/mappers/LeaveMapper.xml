@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ph.activiti.dao.LeaveDao">
+
+	<insert id="addLeave" parameterType="Leave">
+		insert into
+		t_leave(user_id,leave_days,leave_reason)
+		values(#{user.id},#{leaveDays},#{leaveReason})
+	</insert>
+
+	<update id="updateLeaveProcess" parameterType="String">
+		update t_leave set
+		process_instance_id = #{processInstanceId} where id = ${leaveId}
+	</update>
+
+	<!-- 根据流程实例查询所有的请假单 -->
+	<resultMap type="Leave" id="leaveMap">
+		<!-- Leave的基本属性 -->
+		<id property="id" column="id" />
+		<result column="leave_date" property="leaveDate" />
+		<result column="leave_days" property="leaveDays" />
+		<result column="leave_reason" property="leaveReason" />
+		<result column="process_instance_id" property="processInstanceId" />
+		<!-- property:表示本类中关联的对象属性 并将关联对象的列名的别名与关联对象的属性做对应 -->
+		<association property="user" javaType="User">
+			<id column="id" property="id" />
+			<result column="user_name" property="userName" />
+		</association>
+	</resultMap>
+	<select id="listLeaveApplication" parameterType="String"
+		resultMap="leaveMap">
+		SELECT
+		t.id,t.leave_date,t.leave_days,t.leave_reason,t.process_instance_id,t.user_id,tu.user_name
+		FROM t_leave t
+		LEFT JOIN t_user tu
+		ON t.user_id = tu.id
+		where t.process_instance_id = #{processInstanceId}
+	</select>
+
+</mapper> 

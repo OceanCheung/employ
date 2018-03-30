@@ -1,0 +1,30 @@
+/** 员工申请请假*/
+	//登录接口
+	http://localhost:9999/ocean/user/login?userName=员工&password=123
+	//获取用户信息
+	http://localhost:9999/ocean/user/getUserInfo
+	//申请请假接口
+	http://localhost:9999/ocean/leave/applyLeave?leaveDays=3&leaveReason=想请假&user.id=1
+	//提交请假申请接口
+	http://localhost:9999/ocean/leave/commitLeave?leaveId=1
+	//根据用户实例Id查看已经执行的流程图
+	http://localhost:9999/ocean/leave/lookWholeProcessImage?processInstanceId=7501
+	http://localhost:9999/ocean/leave/lookCurrentProcessImage?processInstanceId=7501
+	//根据用户实例Id查看当前的流程图
+	//根据用户名执行任务--------restful接口
+		//1.有分叉的审批
+		http://localhost:9999/ocean/leave/examineByHeadmanVariableMsg/processInstanceId(7501)/userName(项目组长)/msg(通过/不通过)
+		http://localhost:9999/ocean/leave/examineByHeadmanVariableDay/processInstanceId(7501)/userName(人事部)/day(7)
+		//2.无分叉的审批
+		http://localhost:9999/ocean/leave/examineByHeadmanVariableNull/processInstanceId(7501)/userName(项目组长)
+	//根据用户查询待办的任务集合----------restful接口
+	http://localhost:9999/ocean/leave/listWaitMatterPage/项目组长/0/10
+	//根据用户查询历史的任务集合----------restful接口
+	http://localhost:9999/ocean/leave/listHistoryMatterPage/项目组长/0/10
+	//根据流程实例id删除流程
+	http://localhost:9999/ocean/leave/deleteProcessByprocessInstanceId?processInstanceId=7501
+/**全局统一处理异常整合完毕*/
+/**定时调度任务配置完毕 需要在web.xml处解开注释*/
+/** 结建审批流程*/
+
+	

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<beans xmlns="http://www.springframework.org/schema/beans"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:aop="http://www.springframework.org/schema/aop"   
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:jee="http://www.springframework.org/schema/jee"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xsi:schemaLocation="    
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd  
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">    
+	<!-- quartz相关配置 -->
+	<bean id="firstComplexJobDetail"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.ph.activiti.quartz.MyScheduledJob" />
+		<property name="jobDataMap">
+			<map>
+				<entry key="synchronizeBean" value-ref="synchronizeBean" />
+			</map>
+		</property>
+		<property name="Durability" value="true"/>				
+	</bean>
+	
+	<!-- 每周一到周五的早上8点到下午6点，每隔30分钟执行一次的cron表达式 -->
+	    <!-- <property name="cronExpression"  value="0/5 * * ? * *"/> -->
+	    <!-- <property name="cronExpression"  value="0 0/30 8-18 ? * 2-6"/> -->
+	<bean id="myCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail"  ref="firstComplexJobDetail"/>
+	   	<!-- <property name="cronExpression"  value="0 0/1 * ? * *"/> -->
+	   	<property name="cronExpression"  value="0 0/1 * ? * *"/>
+	   	<!-- 	<property name="cronExpression"  value="0 * 0/2 ? * *"/> -->
+	</bean>
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	    <property name="jobDetails">
+	        <list>
+	            <ref bean="firstComplexJobDetail"/>
+	        </list>
+	    </property>
+	    <property name="triggers">
+	        <list>
+	            <ref bean="myCronTrigger"/>
+	        </list>
+	    </property>
+	</bean>
+</beans>
